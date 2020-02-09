@@ -16,8 +16,6 @@ class DatabaseLoader(
     context: Context
 ) : WrappedAsyncTaskLoader<Any?>(context) {
 
-    private val queriedMusic = mutableListOf<Music>()
-
     // This is where background code is executed
     @SuppressLint("InlinedApi")
     override fun loadInBackground(): MusicDatabase? {
@@ -28,9 +26,12 @@ class DatabaseLoader(
 
             val music = musicDao().getAll()
 
-            if (!music.isNullOrEmpty() && !goPreferences.reloadDB)
-                musicLibrary.buildMusicLibrary(context, music)
-            else
+            musicLibrary.updatePlaylist(playlistDao())
+
+            if (!music.isNullOrEmpty() && !goPreferences.reloadDB) {
+                musicLibrary.allSongsUnfiltered = music
+                musicLibrary.buildMusicLibrary(context)
+            } else {
 
                 try {
 
@@ -87,9 +88,9 @@ class DatabaseLoader(
                                 }
 
                             // Add the current music to the database
-                            queriedMusic.add(
+                            musicLibrary.allSongsUnfiltered.add(
                                 Music(
-                                    audioId,
+                                    null,
                                     audioArtist,
                                     audioYear,
                                     audioTrack,
@@ -97,20 +98,22 @@ class DatabaseLoader(
                                     audioDisplayName,
                                     audioDuration,
                                     audioAlbum,
-                                    audioFolderName
+                                    audioFolderName,
+                                    audioId
                                 )
                             )
                         }
                     }
 
-                    musicDao().updateData(queriedMusic)
+                    musicDao().updateData(musicLibrary.allSongsUnfiltered)
 
-                    musicLibrary.buildMusicLibrary(context, queriedMusic)
+                    musicLibrary.buildMusicLibrary(context)
 
                 } catch (e: Throwable) {
                     e.printStackTrace()
                     return null
                 }
+            }
         }
     }
 }

@@ -25,14 +25,6 @@
     <string name="queue_songs_clear">A fila será limpa. Continuar?</string>
     <string name="error_no_queue">Nenhuma música na fila!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">Músicas favoritas</string>
-    <string name="loved_song_added">%1s (%2s) adicionada às músicas favoritas</string>
-    <string name="loved_song_remove">%1s (%2s) será apagada das músicas favoritas. Continuar?</string>
-    <string name="loved_songs_clear">Todas as suas músicas favoritas serão apagadas. Continuar?</string>
-    <string name="loved_song_add">Adicionar às músicas favoritas</string>
-    <string name="error_no_loved_songs">Nenhuma música favorita encontrada!</string>
-
     <!-- Messages -->
     <string name="perm_rationale">Music Player GO precisa acessar seus arquivos para reproduzir música!</string>
     <string name="no_browser">Nenhum navegador encontrado!</string>

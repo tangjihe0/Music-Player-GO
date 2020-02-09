@@ -25,14 +25,6 @@
     <string name="queue_songs_clear">Se limpiará la cola de reproducción. ¿Continuar?</string>
     <string name="error_no_queue">¡No canciones en la cola de reproducción!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">Canciones favoritas</string>
-    <string name="loved_song_added">%1s (%2s) agredada a canciones favoritas</string>
-    <string name="loved_song_remove">%1s (%2s) será removida de las canciones favoritas. ¿Continuar?</string>
-    <string name="loved_songs_clear">Se limpiará la lista de canciones favoritas. ¿Continuar?</string>
-    <string name="loved_song_add">Agregar a canciones favoritas</string>
-    <string name="error_no_loved_songs">!No canciones favoritas!</string>
-
    <!-- Messages -->
     <string name="perm_rationale">Music Player GO necesita acceso a tus archivos para reproducir la música</string>
     <string name="no_browser">¡No se encontró un navegador!</string>

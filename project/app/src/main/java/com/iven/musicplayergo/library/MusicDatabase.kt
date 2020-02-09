@@ -4,11 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.iven.musicplayergo.models.Music
+import com.iven.musicplayergo.models.PlaylistMusic
 
-@Database(entities = [Music::class], version = 1)
+@Database(entities = [Music::class, PlaylistMusic::class], version = 1)
+
+@TypeConverters(PlaylistMusicTypeConverter::class)
 abstract class MusicDatabase : RoomDatabase() {
+
     abstract fun musicDao(): MusicDao
+    abstract fun playlistDao(): PlaylistDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

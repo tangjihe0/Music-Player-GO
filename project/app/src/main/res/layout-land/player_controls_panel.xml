@@ -111,8 +111,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/actionBarItemBackground"
-                    android:onClick="openLovedSongsDialog"
-                    app:srcCompat="@drawable/ic_favorite"
+                    android:onClick="openPlaylistFragment"
+                    app:srcCompat="@drawable/ic_bookmark_music"
                     tools:ignore="ContentDescription" />
 
                 <TextView

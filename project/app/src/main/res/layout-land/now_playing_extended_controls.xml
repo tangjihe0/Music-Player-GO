@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:layout_marginEnd="4dp"
         android:background="?android:attr/actionBarItemBackground"
-        app:srcCompat="@drawable/ic_favorite"
+        app:srcCompat="@drawable/ic_bookmark_music"
         tools:ignore="ContentDescription" />
 
     <!-- VOLUME SEEKBAR -->

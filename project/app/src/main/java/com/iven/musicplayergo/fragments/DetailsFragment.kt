@@ -357,25 +357,23 @@ class DetailsFragment : Fragment(R.layout.fragment_details), SearchView.OnQueryT
                         album.text = item.title
                         year.text = item.year
                         totalDuration.text = item.totalDuration.toFormattedDuration(true)
+                        itemView.isClickable = mSelectedAlbum?.title != item.title
                         checkbox.handleViewVisibility(mSelectedAlbum?.title == item.title)
                     }
 
                     onClick { index ->
 
-                        if (index != mSelectedAlbumPosition) {
+                        mAlbumsRecyclerView.adapter?.apply {
+                            notifyItemChanged(
+                                mSelectedAlbumPosition
+                            )
 
-                            mAlbumsRecyclerView.adapter?.apply {
-                                notifyItemChanged(
-                                    mSelectedAlbumPosition
-                                )
+                            notifyItemChanged(index)
 
-                                notifyItemChanged(index)
-
-                                mSelectedAlbum = item
-                                mSelectedAlbumPosition = index
-                                updateSelectedAlbumTitle()
-                                swapAlbum(item.music)
-                            }
+                            mSelectedAlbum = item
+                            mSelectedAlbumPosition = index
+                            updateSelectedAlbumTitle()
+                            swapAlbum(item.music)
                         }
                     }
                 }

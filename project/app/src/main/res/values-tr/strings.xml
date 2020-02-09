@@ -24,14 +24,6 @@
     <string name="queue_songs_clear">Kuyruk temizlenecek. Devam et?</string>
     <string name="error_no_queue">Kuyrukta şarkı bulunamadı!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">Favori şarkılar</string>
-    <string name="loved_song_added">%1s (%2s) favori şarkılara eklendi</string>
-    <string name="loved_song_remove">%1s (%2s) favori şarkılardan silinecek. Devam et?</string>
-    <string name="loved_songs_clear">Favori şarkılar temizlenecek. Devam et?</string>
-    <string name="loved_song_add">Favori şarkılara eklendi</string>
-    <string name="error_no_loved_songs">Favori şarkı bulunamadı!</string>
-
     <!-- Messages -->
     <string name="perm_rationale">Music Player GO\'nun müziklerinizi oynatması için dosyalarınıza erişmesi gerekiyor!</string>
     <string name="no_browser">Tarayıcı uygulaması bulunamadı!</string>

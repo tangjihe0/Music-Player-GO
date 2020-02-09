@@ -25,14 +25,6 @@
     <string name="queue_songs_clear">A lejátszási lista törlődni fog. Folytatod?</string>
     <string name="error_no_queue">Üres lejátszási lista!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">Kedvencek</string>
-    <string name="loved_song_added">%1s (%2s) hozzáadva a kedvencekhez!</string>
-    <string name="loved_song_remove">%1s (%2s) ki lest törölve a kedvencekből. Folytatod?</string>
-    <string name="loved_songs_clear">Kedvencek törlődni fognak. Folytatod?</string>
-    <string name="loved_song_add">Hozzáadva a kedvencekhez!</string>
-    <string name="error_no_loved_songs">Nincsenek kedvencek!</string>
-
     <!-- Messages -->
     <string name="perm_rationale">Music Player GO hozzáférést igényel a fáljaidhoz hogy zenét tudjon játszani!</string>
     <string name="no_browser">Böngésző nem található!</string>

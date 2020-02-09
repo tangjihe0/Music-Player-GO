@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.afollestad.recyclical.ViewHolder
+import com.google.android.material.chip.Chip
 import com.iven.musicplayergo.R
 
 class GenericViewHolder(itemView: View) : ViewHolder(itemView) {
@@ -22,4 +23,10 @@ class SongsViewHolder(itemView: View) : ViewHolder(itemView) {
     val title: TextView = itemView.findViewById(R.id.title)
     val duration: TextView = itemView.findViewById(R.id.duration)
     val subtitle: TextView = itemView.findViewById(R.id.subtitle)
+}
+
+class PlaylistHolder(itemView: View) : ViewHolder(itemView) {
+    /*    val checkBox: ImageButton = itemView.findViewById(R.id.checkbox)
+    val playlist: TextView = itemView.findViewById(R.id.playlist)*/
+    val playlist: Chip = itemView.findViewById(R.id.chip_playlist)
 }

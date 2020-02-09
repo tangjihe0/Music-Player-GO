@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:chipMinHeight="@android:dimen/app_icon_size"
+    app:chipCornerRadius="@dimen/md_corner_radius"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:ellipsize="end"
+    android:id="@+id/chip_playlist"
+    android:gravity="center"
+    android:singleLine="true"
+    app:checkedIcon="@drawable/ic_playlist_check"
+    android:checkable="true"
+    android:textAlignment="center"
+    android:textColor="?android:attr/textColorPrimary" />

@@ -25,15 +25,6 @@
     <string name="queue_songs_clear">Antrean akan dikosongkan. Lanjutkan?</string>
     <string name="error_no_queue">Tidak ada lagu dalam antrean!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">Favorit</string>
-
-    <string name="loved_song_added">%1s (%2s) ditambahkan ke favorit</string>
-    <string name="loved_song_remove">%1s (%2s) akan dihapus dari favorit. Lanjutkan?</string>
-    <string name="loved_songs_clear">Favorit akan dikosongkan. Lanjutkan?</string>
-    <string name="loved_song_add">Tambahkan ke favorit</string>
-    <string name="error_no_loved_songs">Tidak ada lagu favorit yang ditemukan!</string>
-
     <!-- Messages -->
     <string name="perm_rationale">Music Player GO membutuhkan akses ke berkas musik untuk dapat memutar musik!</string>
     <string name="no_browser">Peramban tidak ditemukan!</string>

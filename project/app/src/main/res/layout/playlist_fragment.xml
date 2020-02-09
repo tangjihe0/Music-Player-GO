@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/playlist_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?android:attr/windowBackground"
+        android:theme="@style/ToolbarStyle"
+        android:elevation="2dp"
+        app:navigationIcon="@drawable/ic_navigate_before"
+        app:subtitleTextAppearance="@style/ToolbarStyle.Subtitle"
+        app:titleTextAppearance="@style/ToolbarStyle.Title"
+        app:titleTextColor="?attr/colorPrimary"
+        app:title="Playlist"/>
+
+    <!-- ALBUMS -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="8dp"
+        android:id="@+id/playlist_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never" />
+
+    <!-- DISC SONGS -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_songs_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+</LinearLayout>

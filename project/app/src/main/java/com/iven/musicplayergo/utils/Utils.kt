@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.text.InputType
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -21,13 +22,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.afollestad.materialdialogs.list.getListAdapter
 import com.afollestad.materialdialogs.list.getRecyclerView
 import com.iven.musicplayergo.*
-import com.iven.musicplayergo.adapters.LovedSongsAdapter
 import com.iven.musicplayergo.adapters.QueueAdapter
 import com.iven.musicplayergo.models.Music
+import com.iven.musicplayergo.models.PlaylistMusic
 import com.iven.musicplayergo.player.MediaPlayerHolder
 import de.halfbit.edgetoedge.Edge
 import de.halfbit.edgetoedge.edgeToEdge
@@ -268,111 +270,27 @@ object Utils {
     }
 
     @JvmStatic
-    fun addToLovedSongs(context: Context, song: Music?, currentPosition: Int) {
-        val lovedSongs =
-            if (goPreferences.lovedSongs != null) goPreferences.lovedSongs else mutableListOf()
-        if (!lovedSongs?.contains(Pair(song, currentPosition))!!) {
-            lovedSongs.add(
-                Pair(
-                    song,
-                    currentPosition
-                )
-            )
-            context.getString(
-                R.string.loved_song_added,
-                song?.title,
-                currentPosition.toLong().toFormattedDuration(false)
-            ).toToast(context)
-            goPreferences.lovedSongs = lovedSongs
-        }
-    }
-
-    @JvmStatic
-    fun showLovedSongsDialog(
+    fun addToPlaylist(
         context: Context,
-        uiControlInterface: UIControlInterface,
-        mediaPlayerHolder: MediaPlayerHolder
-    ) {
-
-        MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
-
-            title(R.string.loved_songs)
-            icon(R.drawable.ic_favorite)
-
-            customListAdapter(
-                LovedSongsAdapter(context, this, uiControlInterface, mediaPlayerHolder)
-            )
-
-            val recyclerView = getRecyclerView()
-
-            if (ThemeHelper.isDeviceLand(context.resources)) {
-                recyclerView.layoutManager = GridLayoutManager(context, 3)
-            } else {
-                recyclerView.addItemDecoration(
-                    ThemeHelper.getRecyclerViewDivider(
-                        context
-                    )
-                )
-                if (goPreferences.isEdgeToEdge) {
-                    window?.apply {
-                        ThemeHelper.handleLightSystemBars(decorView)
-                        edgeToEdge {
-                            recyclerView.fit { Edge.Bottom }
-                            decorView.fit { Edge.Top }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @JvmStatic
-    fun showDeleteLovedSongDialog(
-        context: Context,
-        item: Pair<Music?, Int>?,
-        lovedSongsAdapter: LovedSongsAdapter
-    ) {
-
-        val lovedSongs = goPreferences.lovedSongs?.toMutableList()
-
-        MaterialDialog(context).show {
-
-            title(R.string.loved_songs)
-            icon(R.drawable.ic_delete_forever)
-
-            message(
-                text = context.getString(
-                    R.string.loved_song_remove,
-                    item?.first?.title,
-                    item?.second?.toLong()?.toFormattedDuration(false)
-                )
-            )
-            positiveButton(R.string.yes) {
-                lovedSongs?.remove(item)
-                goPreferences.lovedSongs = lovedSongs
-                lovedSongsAdapter.swapSongs(lovedSongs)
-            }
-
-            negativeButton(R.string.no)
-        }
-    }
-
-    @JvmStatic
-    fun showClearLovedSongDialog(
-        context: Context,
+        music: Music?,
+        currentPosition: Int,
         uiControlInterface: UIControlInterface
     ) {
-
         MaterialDialog(context).show {
-
-            title(R.string.loved_songs)
-            icon(R.drawable.ic_delete_forever)
-
-            message(R.string.loved_songs_clear)
-            positiveButton(R.string.yes) {
-                uiControlInterface.onLovedSongsUpdate(true)
+            input(inputType = InputType.TYPE_CLASS_TEXT, maxLength = 15) { _, playListName ->
+                // Text submitted with the action button
+                music?.apply {
+                    uiControlInterface.onUpdatePlaylist(
+                        false,
+                        PlaylistMusic(
+                            null,
+                            playListName.toString(),
+                            Pair(music, currentPosition)
+                        ).apply {
+                        })
+                }
             }
-            negativeButton(R.string.no)
+            positiveButton(R.string.yes)
         }
     }
 
@@ -390,12 +308,13 @@ object Utils {
 
                     when (it.itemId) {
                         R.id.loved_songs_add -> {
-                            addToLovedSongs(
-                                context,
-                                song,
-                                0
-                            )
-                            uiControlInterface.onLovedSongsUpdate(false)
+                            addToPlaylist(context, song, 0, uiControlInterface)
+                            /*    addToLovedSongs(
+                                    context,
+                                    song,
+                                    0
+                                )
+                                uiControlInterface.onLovedSongsUpdate(false)*/
                         }
                         R.id.queue_add -> uiControlInterface.onAddToQueue(song)
                         R.id.filter_add -> uiControlInterface.onAddToFilter(stringToFilter)

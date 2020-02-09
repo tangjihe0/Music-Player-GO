@@ -24,15 +24,6 @@
     <string name="queue_songs_clear">कतार साफ हो जाएगी। जारी रखें?</string>
     <string name="error_no_queue">कोई गीत पंक्तिबद्ध नहीं!</string>
 
-    <!-- Loved songs -->
-    <string name="loved_songs">प्रिय गीत</string>
-    <string name="loved_song_added">%1s (%2s) प्रिय गीत में जोड़ा गया</string>
-    <string name="loved_song_remove">%1s (%2s) प्रिय गीतों से हटा दिया जाएगा। जारी रखें?</string>
-    <string name="loved_songs_clear">प्रिय गीत साफ हो जाएंगे। जारी रखें?</string>
-    <string name="loved_song_add">प्रिय भरे गीतों में जोड़ें</string>
-    <string name="error_no_loved_songs">कोई प्रिय गीत नहीं मिला!</string>
-
-  
     <!-- Messages -->
     <string name="perm_rationale">Music Player GO को म्यूजिक चलाने के लिए आपकी फाइलों तक पहुंच की जरूरत होती है!</string>
     <string name="no_browser">कोई ब्राउज़र नहीं मिला!</string>

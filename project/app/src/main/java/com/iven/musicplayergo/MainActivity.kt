@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.OpenableColumns
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -41,7 +42,9 @@ import com.iven.musicplayergo.fragments.ArtistsFoldersFragment.Companion.TAG_ART
 import com.iven.musicplayergo.fragments.ArtistsFoldersFragment.Companion.TAG_FOLDERS
 import com.iven.musicplayergo.fragments.ErrorFragment.Companion.TAG_NO_MUSIC_INTENT
 import com.iven.musicplayergo.loader.DatabaseLoader
+import com.iven.musicplayergo.loader.UpdatePlaylistLoader
 import com.iven.musicplayergo.models.Music
+import com.iven.musicplayergo.models.PlaylistMusic
 import com.iven.musicplayergo.player.*
 import com.iven.musicplayergo.utils.MusicUtils
 import com.iven.musicplayergo.utils.ThemeHelper
@@ -54,6 +57,7 @@ import kotlinx.android.synthetic.main.player_controls_panel.*
 import kotlin.properties.Delegates
 
 private const val DATABASE_LOADER_ID = 25
+private const val UPDATE_PLAYLIST_LOADER_ID = 88
 const val PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 2588
 const val RESTORE_SETTINGS_FRAGMENT = "restore_settings_fragment_key"
 
@@ -72,6 +76,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
     private var mAllMusicFragment: AllMusicFragment? = null
     private var mFoldersFragment: ArtistsFoldersFragment? = null
     private var mSettingsFragment: SettingsFragment? = null
+
+    private lateinit var mPlaylistFragment: PlaylistFragment
+    private val sPlaylistFragmentExpanded get() = ::mPlaylistFragment.isInitialized && mPlaylistFragment.isAdded
 
     private lateinit var mDetailsFragment: DetailsFragment
     private val sDetailsFragmentExpanded get() = ::mDetailsFragment.isInitialized && mDetailsFragment.isAdded
@@ -116,6 +123,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
     private lateinit var mRatesTextNP: TextView
 
     //music player things
+    private var mPlaylistSong: PlaylistMusic? = null
+    private var sDeletePlaylistSong = false
 
     //booleans
     private var sUserIsSeeking = false
@@ -167,8 +176,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
 
     override fun onBackPressed() {
         if (sDetailsFragmentExpanded) {
-            closeDetailsFragment(null)
-        } else {
+            closeDetailsFragment(null, false)
+        } else if (sPlaylistFragmentExpanded) closePlaylistFragment(null, false) else {
             if (mViewPager2.currentItem != 0) mViewPager2.currentItem = 0 else
                 if (isMediaPlayerHolder && mMediaPlayerHolder.isPlaying) Utils.stopPlaybackDialog(
                     this,
@@ -316,21 +325,36 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
 
     override fun onLoaderReset(loader: Loader<Any?>) {}
 
-    override fun onCreateLoader(id: Int, args: Bundle?) =
-        DatabaseLoader(this)
+    override fun onCreateLoader(id: Int, args: Bundle?) = when (id) {
+        DATABASE_LOADER_ID -> DatabaseLoader(this)
+        else -> UpdatePlaylistLoader(this, sDeletePlaylistSong, mPlaylistSong)
+    }
 
     override fun onLoadFinished(loader: Loader<Any?>, data: Any?) {
 
-        LoaderManager.getInstance(this).destroyLoader(DATABASE_LOADER_ID)
+        when (loader.id) {
+            DATABASE_LOADER_ID -> {
 
-        loading_progress_bar.apply {
-            if (visibility != View.GONE) visibility = View.GONE
+                LoaderManager.getInstance(this).destroyLoader(DATABASE_LOADER_ID)
+                loading_progress_bar.apply {
+                    if (visibility != View.GONE) visibility = View.GONE
+                }
+
+                musicLibrary.playlist?.keys?.forEach {
+                    Log.d("acca", it)
+                }
+                if (data != null && !musicLibrary.allSongsUnfiltered.isNullOrEmpty()) finishSetup()
+                else notifyError(
+                    ErrorFragment.TAG_NO_MUSIC
+                )
+            }
+            UPDATE_PLAYLIST_LOADER_ID -> {
+
+                LoaderManager.getInstance(this).destroyLoader(
+                    UPDATE_PLAYLIST_LOADER_ID
+                )
+            }
         }
-
-        if (data != null && !musicLibrary.allSongs.isNullOrEmpty()) finishSetup()
-        else notifyError(
-            ErrorFragment.TAG_NO_MUSIC
-        )
     }
 
     private fun launchBuildMusicDB() {
@@ -379,8 +403,14 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab) {
-                    if (sDetailsFragmentExpanded) closeDetailsFragment(tab) else
+                    if (sDetailsFragmentExpanded || sPlaylistFragmentExpanded) {
+
+                        if (sDetailsFragmentExpanded) closeDetailsFragment(tab, false)
+                        if (sPlaylistFragmentExpanded) closePlaylistFragment(tab, false)
+
+                    } else {
                         tab.icon?.setTint(mResolvedAccentColor)
+                    }
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -388,7 +418,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
                 }
 
                 override fun onTabReselected(tab: TabLayout.Tab) {
-                    if (sDetailsFragmentExpanded) closeDetailsFragment(null)
+                    if (sDetailsFragmentExpanded) closeDetailsFragment(null, false)
+                    if (sPlaylistFragmentExpanded) closePlaylistFragment(null, false)
                 }
             })
 
@@ -427,6 +458,20 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
         else -> mSettingsFragment
     }
 
+    fun openPlaylistFragment(view: View) {
+        if (!sPlaylistFragmentExpanded) {
+            mPlaylistFragment =
+                PlaylistFragment.newInstance(mMediaPlayerHolder.isPlayingFromPlaylist.third)
+            if (sDetailsFragmentExpanded) closeDetailsFragment(
+                null,
+                true
+            ) else supportFragmentManager.beginTransaction()
+                .addFragment(true, R.id.container, mPlaylistFragment)
+        } else {
+            closePlaylistFragment(null, false)
+        }
+    }
+
     private fun openDetailsFragment(
         selectedArtistOrFolder: String?,
         isFolder: Boolean
@@ -439,11 +484,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
                 MusicUtils.getPlayingAlbumPosition(selectedArtistOrFolder, mMediaPlayerHolder)
             )
 
-        supportFragmentManager.beginTransaction()
-            .addFragment(true, R.id.container, mDetailsFragment)
+        if (sPlaylistFragmentExpanded) {
+            closePlaylistFragment(null, true)
+        } else {
+            supportFragmentManager.beginTransaction()
+                .addFragment(true, R.id.container, mDetailsFragment)
+        }
     }
 
-    private fun closeDetailsFragment(tab: TabLayout.Tab?) {
+    private fun closeDetailsFragment(tab: TabLayout.Tab?, openPlaylistFragment: Boolean) {
         if (!sRevealAnimationRunning) {
             mDetailsFragment.onHandleBackPressed().apply {
                 sRevealAnimationRunning = true
@@ -451,6 +500,24 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
                 doOnEnd {
                     synchronized(super.onBackPressed()) {
                         sRevealAnimationRunning = false
+                        if (openPlaylistFragment && !sPlaylistFragmentExpanded) supportFragmentManager.beginTransaction()
+                            .addFragment(true, R.id.container, mPlaylistFragment)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun closePlaylistFragment(tab: TabLayout.Tab?, openDetailsFragment: Boolean) {
+        if (!sRevealAnimationRunning) {
+            mPlaylistFragment.onHandleBackPressed().apply {
+                sRevealAnimationRunning = true
+                tab?.icon?.setTint(mResolvedAccentColor)
+                doOnEnd {
+                    synchronized(super.onBackPressed()) {
+                        sRevealAnimationRunning = false
+                        if (openDetailsFragment) supportFragmentManager.beginTransaction()
+                            .addFragment(true, R.id.container, mDetailsFragment)
                     }
                 }
             }
@@ -469,7 +536,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
             return@setOnLongClickListener true
         }
 
-        mLovedSongsButton.setOnLongClickListener {
+        /*mLovedSongsButton.setOnLongClickListener {
             if (!goPreferences.lovedSongs.isNullOrEmpty()) Utils.showClearLovedSongDialog(
                 this,
                 this
@@ -477,7 +544,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
             return@setOnLongClickListener true
         }
 
-        onLovedSongsUpdate(false)
+        onLovedSongsUpdate(false)*/
 
         playing_songs_container.setOnLongClickListener { playerControlsContainer ->
             if (checkIsPlayer(true)) openPlayingArtistAlbum(playerControlsContainer)
@@ -611,12 +678,13 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
 
                 mLoveButtonNP = customView.findViewById(R.id.np_love)
                 mLoveButtonNP.setOnClickListener {
-                    Utils.addToLovedSongs(
+                    Utils.addToPlaylist(
                         this@MainActivity,
                         mMediaPlayerHolder.currentSong.first,
-                        mMediaPlayerHolder.playerPosition
+                        mMediaPlayerHolder.playerPosition,
+                        this@MainActivity
                     )
-                    onLovedSongsUpdate(false)
+                    // onLovedSongsUpdate(false)
                 }
 
                 mVolumeSeekBarNP = customView.findViewById(R.id.np_volume_seek)
@@ -833,29 +901,39 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
     fun openPlayingArtistAlbum(view: View) {
         if (isMediaPlayerHolder && mMediaPlayerHolder.isCurrentSong) {
 
-            val isPlayingFromFolder = mMediaPlayerHolder.isPlayingFromFolder
-            val selectedSong = mMediaPlayerHolder.currentSong.first
-            val selectedArtistOrFolder =
-                if (isPlayingFromFolder) selectedSong?.relativePath else selectedSong?.artist
-            if (sDetailsFragmentExpanded) {
-                if (mDetailsFragment.hasToUpdate(selectedArtistOrFolder)) {
-                    synchronized(super.onBackPressed()) {
-                        openDetailsFragment(
-                            selectedArtistOrFolder,
-                            mMediaPlayerHolder.isPlayingFromFolder
+            val isPlayFromPlaylist = mMediaPlayerHolder.isPlayingFromPlaylist.first
+
+            if (isPlayFromPlaylist) {
+                openPlaylistFragment(view)
+            } else {
+                val isPlayingFromFolder = mMediaPlayerHolder.isPlayingFromFolder
+                val selectedSong = mMediaPlayerHolder.currentSong.first
+                val selectedArtistOrFolder =
+                    if (isPlayingFromFolder) selectedSong?.relativePath else selectedSong?.artist
+                if (sDetailsFragmentExpanded) {
+                    if (mDetailsFragment.hasToUpdate(selectedArtistOrFolder)) {
+                        synchronized(super.onBackPressed()) {
+                            openDetailsFragment(
+                                selectedArtistOrFolder,
+                                mMediaPlayerHolder.isPlayingFromFolder
+                            )
+                        }
+                    } else {
+                        mDetailsFragment.tryToSnapToAlbumPosition(
+                            MusicUtils.getPlayingAlbumPosition(
+                                selectedArtistOrFolder,
+                                mMediaPlayerHolder
+                            )
                         )
                     }
                 } else {
-                    mDetailsFragment.tryToSnapToAlbumPosition(
-                        MusicUtils.getPlayingAlbumPosition(
-                            selectedArtistOrFolder,
-                            mMediaPlayerHolder
-                        )
+                    openDetailsFragment(
+                        selectedArtistOrFolder,
+                        mMediaPlayerHolder.isPlayingFromFolder
                     )
                 }
-            } else {
-                openDetailsFragment(selectedArtistOrFolder, mMediaPlayerHolder.isPlayingFromFolder)
             }
+
 
             if (isNowPlaying) mNowPlayingDialog.dismiss()
         }
@@ -950,6 +1028,35 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
         onSongSelected(song, songs, isFromFolder)
     }
 
+    override fun onUpdatePlaylist(delete: Boolean, playlistMusic: PlaylistMusic) {
+
+        sDeletePlaylistSong = delete
+
+        mPlaylistSong = playlistMusic
+
+        getString(
+            if (sDeletePlaylistSong) R.string.song_removed_from_playlist else R.string.song_added_to_playlist,
+            mPlaylistSong?.song?.first?.title,
+            mPlaylistSong?.song?.second?.toLong()?.toFormattedDuration(false),
+            mPlaylistSong?.playlistName
+        ).toToast(this)
+
+        LoaderManager.getInstance(this).initLoader(
+            UPDATE_PLAYLIST_LOADER_ID,
+            null,
+            this
+        )
+    }
+
+    override fun onPlayFromPlaylist(
+        playlistName: String?,
+        playlistSong: Pair<Music, Int>,
+        selectedPlaylist: List<Music>?
+    ) {
+        mMediaPlayerHolder.isPlayingFromPlaylist = Triple(true, playlistSong.second, playlistName)
+        onSongSelected(playlistSong.first, selectedPlaylist, false)
+    }
+
     override fun onAddToFilter(stringToFilter: String?) {
         stringToFilter?.let { string ->
             mArtistsFragment?.onListFiltered(string)
@@ -963,13 +1070,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity), UIControlInterfa
             mQueueDialog = Utils.showQueueSongsDialog(this, mMediaPlayerHolder)
         else
             getString(R.string.error_no_queue).toToast(this)
-    }
-
-    fun openLovedSongsDialog(view: View) {
-        if (!goPreferences.lovedSongs.isNullOrEmpty())
-            Utils.showLovedSongsDialog(this, this, mMediaPlayerHolder)
-        else
-            getString(R.string.error_no_loved_songs).toToast(this)
     }
 
     //method to handle intent to play audio file from external app

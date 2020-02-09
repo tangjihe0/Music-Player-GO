@@ -1,6 +1,7 @@
 package com.iven.musicplayergo.utils
 
 import com.iven.musicplayergo.models.Music
+import com.iven.musicplayergo.models.PlaylistMusic
 
 interface UIControlInterface {
     fun onAppearanceChanged(isAccentChanged: Boolean, restoreSettings: Boolean)
@@ -14,4 +15,10 @@ interface UIControlInterface {
     fun onAddToFilter(stringToFilter: String?)
     fun onDenyPermission()
     fun onStopPlaybackFromReloadDB()
+    fun onUpdatePlaylist(delete: Boolean, playlistMusic: PlaylistMusic)
+    fun onPlayFromPlaylist(
+        playlistName: String?,
+        playlistSong: Pair<Music, Int>,
+        selectedPlaylist: List<Music>?
+    )
 }

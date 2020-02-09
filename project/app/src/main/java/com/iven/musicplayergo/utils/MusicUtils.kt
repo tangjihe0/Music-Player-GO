@@ -74,7 +74,7 @@ object MusicUtils {
     @JvmStatic
     fun getSongForIntent(
         displayName: String?
-    ): Music? = musicLibrary.allSongs?.firstOrNull { s -> s.displayName == displayName }
+    ): Music? = musicLibrary.allSongsUnfiltered.firstOrNull { s -> s.displayName == displayName }
 
     @JvmStatic
     fun buildSortedArtistAlbums(

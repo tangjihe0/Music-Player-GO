@@ -101,6 +101,8 @@ class MediaPlayerHolder(private val playerService: PlayerService) :
     //first: current song, second: isFromQueue
     lateinit var currentSong: Pair<Music?, Boolean>
     var isPlayingFromFolder = false
+    var isPlayingFromPlaylist: Triple<Boolean, Int, String?> = Triple(false, 0, null)
+
     private var isPlayingFromFolderPreQueue = false
     private var mPlayingAlbumSongs: List<Music>? = null
 
@@ -123,7 +125,6 @@ class MediaPlayerHolder(private val playerService: PlayerService) :
     var queueSongs = mutableListOf<Music>()
 
     var isSongRestoredFromPrefs = false
-    var isSongFromLovedSongs = Pair(false, 0)
 
     var state = PAUSED
     var isPlay = false
@@ -447,9 +448,8 @@ class MediaPlayerHolder(private val playerService: PlayerService) :
         if (isSongRestoredFromPrefs) {
             if (goPreferences.isPreciseVolumeEnabled) setPreciseVolume(currentVolumeInPercent)
             mediaPlayer.seekTo(goPreferences.latestPlayedSong?.second!!)
-        } else if (isSongFromLovedSongs.first) {
-            mediaPlayer.seekTo(isSongFromLovedSongs.second)
-            isSongFromLovedSongs = Pair(false, 0)
+        } else if (isPlayingFromPlaylist.first) {
+            mediaPlayer.seekTo(isPlayingFromPlaylist.second)
         }
 
         if (isQueue) mediaPlayerInterface.onQueueStartedOrEnded(isQueueStarted)
