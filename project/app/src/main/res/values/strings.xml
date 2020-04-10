@@ -1,108 +1,107 @@
 <resources>
-
     <!-- Dialogs / Buttons -->
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="on_close_activity">Do you want to stop playback?</string>
-    <string name="queue_songs_clear">Queue will be cleared. Continue?</string>
-    <string name="loved_songs_clear">Loved songs will be cleared. Continue?</string>
-    <string name="loved_song_remove">%1s (%2s) will be deleted from loved songs. Continue?</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="on_close_activity">您要停止播放吗？</string>
+    <string name="queue_songs_clear">播放列表将被清除。继续？</string>
+    <string name="loved_songs_clear">喜欢的歌曲列表将被清除。继续？</string>
+    <string name="loved_song_remove">%1s (%2s) 将从喜欢的歌曲中删除歌曲。继续？</string>
 
     <!-- Main - Fragments titles -->
-    <string name="artists">Artists</string>
-    <string name="songs">Songs</string>
-    <string name="folders">Folders</string>
+    <string name="artists">艺术家</string>
+    <string name="songs">歌曲</string>
+    <string name="folders">文件夹</string>
 
     <!-- Main - Artists/Folder RecyclerViews items  -->
-    <string name="artist_info">%1d&#160;Albums,&#160;%2d&#160;Songs</string>
-    <string name="folder_info">%1d&#160;Songs</string>
+    <string name="artist_info">%1d&#160;专辑,&#160;%2d&#160;Songs</string>
+    <string name="folder_info">%1d&#160;歌曲</string>
 
     <!-- Popup/Menu titles -->
-    <string name="sorting_pref">Sorting</string>
-    <string name="sorting_pref_default">Default</string>
-    <string name="sorting_pref_track">By track no. &#8595;</string>
-    <string name="sorting_pref_track_inv">By track no. &#8593;</string>
-    <string name="shuffle_am">Shuffle all songs</string>
-    <string name="shuffle_sa">Shuffle selected album</string>
-    <string name="queue_add">Add to queue</string>
-    <string name="loved_song_add">Add to loved songs</string>
-    <string name="filter_popup_title">Hide</string>
+    <string name="sorting_pref">排序</string>
+    <string name="sorting_pref_default">默认</string>
+    <string name="sorting_pref_track">按轨道号。 &#8595;</string>
+    <string name="sorting_pref_track_inv">按曲目号。 &#8593;</string>
+    <string name="shuffle_am">随机播放所有歌曲</string>
+    <string name="shuffle_sa">随机播放所选专辑</string>
+    <string name="queue_add">加入播放列表</string>
+    <string name="loved_song_add">加入喜欢列表</string>
+    <string name="filter_popup_title">隐藏</string>
 
     <!-- Queue -->
-    <string name="queue">Queue</string>
-    <string name="queue_song_add">%1s added to queue!</string>
-    <string name="queue_song_remove">%1s will be deleted from queue. Continue?</string>
+    <string name="queue">播放列表</string>
+    <string name="queue_song_add">%1s 已加入播放列表！</string>
+    <string name="queue_song_remove">%1s 将从播放列表中删除，继续？</string>
 
     <!-- Loved songs -->
-    <string name="loved_songs">Loved songs</string>
-    <string name="loved_song_added">%1s (%2s) added to loved songs</string>
+    <string name="loved_songs">喜欢</string>
+    <string name="loved_song_added">%1s (%2s) 加入喜欢列表</string>
 
     <!-- Messages - Errors -->
-    <string name="error_no_loved_songs">No loved songs found!</string>
-    <string name="error_no_music">No music found :(</string>
-    <string name="error_not_ready">There was an issue while loading the music library! :( This could be due to the SD card getting unmounted, forcing the Android\'s MediaStore to rebuild its database records. Solution: try again later.</string>
-    <string name="error_unknown_unsupported">Something went wrong! :( Perhaps the chosen format is not supported, or the folder is not accessible (not an app\'s fault!).</string>
-    <string name="error_media_buttons">Something went wrong! :( Please restart playback from the app.</string>
-    <string name="error_no_browser">No browser found!</string>
-    <string name="error_bad_id">Play a song first!</string>
-    <string name="error_no_eq">No equalizer found!</string>
-    <string name="error_no_filter">No filters found!</string>
-    <string name="error_no_queue">No songs queued!</string>
+    <string name="error_no_loved_songs">找不到喜欢的歌曲！</string>
+    <string name="error_no_music">未找到歌曲 :(</string>
+    <string name="error_not_ready">加载音乐库时出现问题！ :( This could be due to the SD card getting unmounted, forcing the Android\'s MediaStore to rebuild its database records. Solution: try again later.</string>
+    <string name="error_unknown_unsupported">出了些问题！ :( Perhaps the chosen format is not supported, or the folder is not accessible (not an app\'s fault!).</string>
+    <string name="error_media_buttons">出了些问题！ :( Please restart playback from the app.</string>
+    <string name="error_no_browser">找不到浏览器！</string>
+    <string name="error_bad_id">请先播放歌曲！</string>
+    <string name="error_no_eq">找不到均衡器！</string>
+    <string name="error_no_filter">找不到过滤器！</string>
+    <string name="error_no_queue">没有播放列表！</string>
 
     <!-- Messages - Permission rationale -->
-    <string name="perm_rationale">Music Player GO needs access to your files to play music!</string>
+    <string name="perm_rationale">Music Player GO 需要访问您的文件才能播放音乐！</string>
 
     <!-- Messages - Repeat -->
-    <string name="repeat_enabled">Repeat 1x enabled!</string>
-    <string name="repeat_loop_enabled">Repeat &#8734; enabled!</string>
-    <string name="repeat_disabled">Repeat &#8734; disabled!</string>
+    <string name="repeat_enabled">重复启用1倍速！</string>
+    <string name="repeat_loop_enabled">重复 &#8734; 已启用！</string>
+    <string name="repeat_disabled">重复 &#8734; 不可用！</string>
 
     <!-- Preferences - Categories -->
-    <string name="settings">Settings</string>
-    <string name="category_general">General</string>
+    <string name="settings">设置</string>
+    <string name="category_general">普通</string>
 
     <!-- Preferences - Git page -->
-    <string name="open_git_pref_title">GitHub page</string>
+    <string name="open_git_pref_title">GitHub 页</string>
     <string name="open_git_pref_summary">Open the project\'s page for more info :)</string>
 
     <!-- Preferences - FAQ -->
     <string name="faq_summary">FAQ and supported media formats :P</string>
 
     <!-- Preferences - Found songs -->
-    <string name="found_songs_pref_title">Found songs: %1d</string>
+    <string name="found_songs_pref_title">发现歌曲: %1d</string>
 
     <!-- Preferences - Themes -->
-    <string name="theme_pref_title">Theme</string>
-    <string name="theme_pref_light_title">Light</string>
-    <string name="theme_pref_dark_title">Dark</string>
-    <string name="theme_pref_auto_title">Automatic</string>
+    <string name="theme_pref_title">主题</string>
+    <string name="theme_pref_light_title">亮色</string>
+    <string name="theme_pref_dark_title">暗色</string>
+    <string name="theme_pref_auto_title">自动</string>
 
     <!-- Preferences - Accent -->
-    <string name="accent_pref_title">Accent</string>
+    <string name="accent_pref_title">音调</string>
 
     <!-- Preferences - Edge-to-edge -->
-    <string name="edge_pref_summary_on">Disable edge-to-edge</string>
-    <string name="edge_pref_summary_off">Enable edge-to-edge</string>
+    <string name="edge_pref_summary_on">禁用停靠</string>
+    <string name="edge_pref_summary_off">启用停靠</string>
 
     <!-- Preferences - Active tabs -->
-    <string name="active_fragments_pref_title">Active tabs</string>
-    <string name="active_fragments_pref_warning">You can\'t just remove all the tabs! :P</string>
+    <string name="active_fragments_pref_title">标签</string>
+    <string name="active_fragments_pref_warning">您不能删除所有标签！ :P</string>
 
     <!-- Preferences - Fine volume control -->
-    <string name="precise_volume_pref_title">Precise volume control</string>
-    <string name="precise_volume_pref_summary_on">Disable precise volume control</string>
-    <string name="precise_volume_pref_summary_off">Enable precise volume control</string>
+    <string name="precise_volume_pref_title">精确的音量控制</string>
+    <string name="precise_volume_pref_summary_on">禁用精确的音量控制</string>
+    <string name="precise_volume_pref_summary_off">启用精确的音量控制</string>
 
     <!-- Preferences - Focus -->
-    <string name="focus_pref_title">Audio focus</string>
-    <string name="focus_pref_summary_on">Disable audio focus management</string>
-    <string name="focus_pref_summary_off">Enable audio focus management</string>
+    <string name="focus_pref_title">音频焦点</string>
+    <string name="focus_pref_summary_on">禁用音频焦点管理</string>
+    <string name="focus_pref_summary_off">启用音频焦点管理</string>
 
     <!-- Preferences - Headsets -->
-    <string name="headset_pref_title">Headset plug</string>
-    <string name="headset_pref_summary_on">Disable headset plug management</string>
-    <string name="headset_pref_summary_off">Enable headset plug management</string>
+    <string name="headset_pref_title">耳机插口</string>
+    <string name="headset_pref_summary_on">禁用耳机插头管理</string>
+    <string name="headset_pref_summary_off">启用耳机插头管理</string>
 
     <!-- Preferences - Filters -->
-    <string name="filter_pref_title">Filters</string>
+    <string name="filter_pref_title">滤波器</string>
 </resources>
